@@ -34,4 +34,10 @@ self.addEventListener('sync', event => {
   console.log('Tenemos conexion');
   console.log(event);
   console.log(event.tag);
-})
+});
+
+
+// Manejo de las notificaciones push de la aplicacion
+self.addEventListener('push', event => {
+  console.log('Notidficacion recibida');
+});
