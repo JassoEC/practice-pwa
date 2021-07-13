@@ -7,15 +7,11 @@ if (navigator.serviceWorker) {
                 //console.log('Se mandaron fotos de gatos, ay que bonito');
             }, 3000) */
 
-
             Notification.requestPermission().then(result => {
                 console.log(result);
                 reg.showNotification('Hola de nuéz!! ')
             })
         });
-
-
-
 }
 
 /* if(){
