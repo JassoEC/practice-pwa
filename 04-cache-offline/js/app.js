@@ -2,7 +2,7 @@ if (navigator.serviceWorker) {
     navigator.serviceWorker.register('/sw.js');
 }
 
-if (window.caches) {
+/* if (window.caches) {
     // es un espacio del navegador en el hdd
     caches.open('prueba-1')
     caches.open('prueba-2')
@@ -21,17 +21,17 @@ if (window.caches) {
             '/css/style.css',
             '/img/main.jpg'
         ]).then(() => {
-            /* cache.delete('/css/style.css') */
+            cache.delete('/css/style.css')
             cache.put('index.html', new Response('Hola mundirijillo'))
         });
 
 
-        /* cache.match('/index.html').then(resp => {
+        cache.match('/index.html').then(resp => {
             resp.text().then(console.log)
-        }) */
+        })
     });
 
 
     caches.keys().then(keys => console.log(keys))
 
-}
+} */
