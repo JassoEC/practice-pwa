@@ -1,7 +1,18 @@
 // const CACHE_NAME = 'cache-1'
-const CACHE_STATIC_NAME = 'static-v1'
-const CACHE_DYNAMIC_NAME = 'static-v1'
+const CACHE_STATIC_NAME = 'static-v2'
+const CACHE_DYNAMIC_NAME = 'dynamic-v1'
+
 const CACHE_INMUTABLE_NAME = 'inmutable-v1'
+
+const clearCache = (name, items = 10) => {
+  caches.open(name).then(cache => {
+    return cache.keys().then(keys => {
+      if (keys.length > items) {
+        cache.delete(keys[0]).then(clearCache(name, items))
+      }
+    })
+  })
+}
 
 
 // se almacena lo que corresponde al app shell
@@ -51,6 +62,7 @@ self.addEventListener('fetch', e => {
       caches.open(CACHE_DYNAMIC_NAME)
         .then(cache => {
           cache.put(e.request, newResp)
+          clearCache(CACHE_DYNAMIC_NAME, 5)
         });
       return newResp.clone();
     })
