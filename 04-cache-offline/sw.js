@@ -26,7 +26,8 @@ self.addEventListener('install', e => {
         '/index.html',
         '/css/style.css',
         '/img/main.jpg',
-        '/js/app.js'
+        '/js/app.js',
+        '/img/no-img.jpg'
       ]);
       // si alguna de las instalaciones falla, falla todas.
     })
@@ -93,7 +94,7 @@ self.addEventListener('fetch', e => {
   // Las actualizaciones siempre estaran un paso atrás
   // Se supome que toda la  informacion esta en el cache.
 
-  if (e.request.url.includes('bootstrap')) {
+  /* if (e.request.url.includes('bootstrap')) {
     return e.respondWith(caches.match(e.request))
   }
 
@@ -105,7 +106,41 @@ self.addEventListener('fetch', e => {
     return cache.match(e.request);
   })
 
-  e.respondWith(response);
+  e.respondWith(response); */
+
+
+  //  Cache && Network race
+
+
+  const response = new Promise((resolve, reject) => {
+
+    let rechazada = false;
+
+    const falloUnaVez = () => {
+      if (rechazada) {
+
+        if (/\.(png|jpg)/i.test(e.request.url)) {
+          resolve(caches.match('/img/no-img.jpg'))
+        } else {
+          reject('no se encontro ninguna imagen')
+        }
+      } else {
+        rechazada = true
+      }
+    }
+
+    fetch(e.request).then(res => {
+      res.ok ? resolve(res) : falloUnaVez();
+    }).catch(falloUnaVez)
+
+    caches.match(e.request).then(res => {
+      res ? resolve(res) : falloUnaVez();
+    }).catch(falloUnaVez)
+
+  });
+
+
+  e.respondWith(response)
 
 
 });
