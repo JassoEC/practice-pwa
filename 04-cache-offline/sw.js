@@ -74,7 +74,7 @@ self.addEventListener('fetch', e => {
 
   // Cache with network fallback
 
-  const networkResp = fetch(e.request).then(resp => {
+  /* const networkResp = fetch(e.request).then(resp => {
 
     if (!resp) return caches.match(e.request);
 
@@ -87,5 +87,25 @@ self.addEventListener('fetch', e => {
     return caches.match(e.request)
   });
 
-  e.respondWith(networkResp)
+  e.respondWith(networkResp) */
+
+  // Cache with netwioek update: Util cuando el rendimiento es critico
+  // Las actualizaciones siempre estaran un paso atrás
+  // Se supome que toda la  informacion esta en el cache.
+
+  if (e.request.url.includes('bootstrap')) {
+    return e.respondWith(caches.match(e.request))
+  }
+
+  const response = caches.open(CACHE_STATIC_NAME).then(cache => {
+
+    fetch(e.request).then(newRes => cache.put(e.request, newRes));
+
+    // aunque se graba se retorna lo que que se tenia en el cache
+    return cache.match(e.request);
+  })
+
+  e.respondWith(response);
+
+
 });
